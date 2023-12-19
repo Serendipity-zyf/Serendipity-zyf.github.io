@@ -3,12 +3,13 @@
         <title>My New Hugo Site</title>
         <link>http://example.org/</link>
         <description>The Meandering Trail of an NLP Practitioner&#39;s Quest.</description>
-        <generator>Hugo -- gohugo.io</generator><language>en</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Mon, 18 Dec 2023 00:19:53 &#43;0800</lastBuildDate>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>metazyf@gmail.com (Zyf)</managingEditor>
+            <webMaster>metazyf@gmail.com (Zyf)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Mon, 18 Dec 2023 00:19:53 &#43;0800</lastBuildDate>
             <atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
         <item>
     <title>大模型入门指南——Deep into the Large Language Models</title>
-    <link>http://example.org/posts/llms/</link>
-    <pubDate>Mon, 18 Dec 2023 00:19:53 &#43;0800</pubDate><guid>http://example.org/posts/llms/</guid>
+    <link>http://example.org/llms/</link>
+    <pubDate>Mon, 18 Dec 2023 00:19:53 &#43;0800</pubDate><author>metazyf@gmail.com (Zyf)</author><guid>http://example.org/llms/</guid>
     <description><![CDATA[本文首先指出大模型源于Google于2017年提出的Transformer架构，开启了大模型时代的来临。随后，文中概述了大模型发展的两大路线:第一是BERT等仅使用Transformer的Encoder进行预训练的模型，通过遮蔽语言模型实现“无监督预训练”，在NLP任务上获得成功。第二是GPT等保留了Transformer的Decoder的模型，通过不断放大模型规模，其零样本和小样本学习能力得以提升，突破了尺寸增加带来的性能瓶颈。GPT-3标志着后一类模型的重要进展。尽管GPT系列取得了进步，但也面临着模型过大带来的训练和推理困难。研究人员仍需在平衡模型规模与性能等方面进行探索。]]></description>
 </item>
 </channel>

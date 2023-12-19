@@ -1,0 +1,61 @@
+# 大模型入门指南——Deep into the Large Language Models
+
+
+<!--more-->
+
+### 背景介绍
+
+大模型的起源可以追溯到 2017 年 Google 机器翻译团队发表的著名论文 *Attention is All You Need*$^{[1]}$。这篇文章提出的由多个编码器（ Encoder） 子块和多个解码器（Decoder）子块堆叠组成的纯注意力机制的模型 *Transformer* ，宣告了大模型时代的到来。近些年来，大模型的发展大致有两条以下路线：
+
+1、一条路是舍弃 *Transformer* 模型中的 Decoder 部分，仅仅使用 Encoder 部分作为编码器的预训练模型，其中最著名的代表就是 *BERT*$^{[2]}$ (Bidirectional Encoder Representations from Transformers) 家族。这些模型尝试使用"无监督预训练"的方法，以更好地利用相对容易获取的大规模自然语言数据。这种 “无监督” 方法的核心是 “Masked Language Model (MLM)”，即 “遮蔽语言模型”。它通过将句子中的部分单词进行掩盖，让模型学会使用上下文来预测被掩盖的单词。*BERT* 模型刚问世时在自然语言处理领域引起了巨大轰动，同时在许多常见的自然语言处理任务中，如情感分析、命名实体识别等方面都达到了 SOTA。*BERT* 家族的杰出代表包括谷歌提出的 *BERT* 和 *ALBERT*$^{[4]}$，还有百度的 *ERNIE*$^{[5]}$、Meta 的 *RoBERTa*$^{[6]}$、Microsoft 的 *DeBERTa*$^{[7]}$ 等等。
+
+2、可惜的是，*BERT* 的进路没能突破 ***Scale Law***，而这一点则由当下大模型的主力军，即大模型发展的另一条路线是保留 Decoder 模块的 *GPT*$^{[3]}$ (Generative Pre-trained Transformer) 系列，通过给出部分文本来预测下一个单词，实现语言模型的预训练。 *GPT* 系列的关键发现是，随着模型规模的扩大，即使不进行微调，其零样本 (Zero-shot) 和小样本学习 (Few-shot) 的能力也可以显著提升。*GPT-3*$^{[8]}$ 的出现成为这一路线的转折点，它展示了自回归语言模型的强大潜力，不仅在文本生成方面，还可以完成许多看似不相关的任务。从 *GPT-3* 开始，各家公司推出了 *ChatGPT*$^{[9]}$、*GPT-4*$^{[10]}$、*Bard*$^{[11]}$、*PaLM*$^{[12]}$、*LLaMA*$^{[13]}$ 等大模型，掀起了当下大模型技术的热潮，由此带来了当下的大模型盛世。
+
+> **Scale Law (规模法则)**$^{[14]}$ 指的是机器学习模型的性能随着模型规模的扩大而提升的规律。具体来说：
+>
+> - 在神经网络模型中，当模型的参数量(增加时，模型的表达能力和建模能力也会提高，从而模型的性能会有显著提升。这体现了“大模型”效应。
+> - 一般来说，模型参数量和模型性能之间呈指数关系，即模型性能随着参数量的增加会呈现出指数型增长。这称为“Scale Law”。
+> - *BERT* 等预训练语言模型在一定规模下会达到性能饱和，无法通过继续增加规模来获得明显提升，被称为遇到 “Scale Law” 瓶颈。
+> - *GPT* 系列模型表现出了突破 “Scale Law” 的可能,通过持续增加模型规模，其性能可以获得持续较明显的提升。
+>
+> Scale Law 反映了模型规模和模型性能之间的关系，预训练语言模型在某个规模会遇到瓶颈，而 *GPT* 系列表现出突破该瓶颈的可能性。它揭示了模型规模扩大对性能提升的重要作用。*GPT* 系列模型相对于 *BERT* 系列模型有一些不同之处，这些不同之处可能有助于其在一定程度上避免 Scale Law 的限制。以下是一些可能的原因：
+>
+> 1. **Auto-regressive 生成**：*GPT* 系列模型采用了**自回归 (Auto-regressive)** 生成的方法，它们的预训练任务是预测下一个单词，而不是像 BERT 那样预测被掩盖的单词。这意味着 *GPT* 模型在预训练阶段已经学会了更好地捕捉文本的上下文信息，这有助于它们在各种自然语言处理任务中表现良好。
+> 2. **单向性和掩盖**：*BERT* 模型使用了双向掩盖 (MLM)，其中模型需要预测被掩盖的单词。相比之下，*GPT* 模型是单向的，只需要预测文本中的下一个单词。这种单向性有助于 *GPT* 模型更好地捕捉文本的连续性和流畅性。
+> 3. **生成能力**：*GPT* 系列模型被设计成生成模型，可以自动生成文本。这使得它们在生成任务上具有明显的优势，例如文本生成、对话生成等。*BERT* 系列模型通常需要进一步的任务特定头部来进行微调，而 *GPT* 模型可以直接用于生成任务。
+>
+> 尽管 *GPT* 系列模型有这些优势，它们也受到了 Scale Law 的限制，增加模型的尺寸仍然会导致训练和推理成本的显著增加。因此，研究人员也在不断探索如何更好地平衡模型尺寸和性能，以及如何通过模型压缩和微调等技术来克服这些限制，以实现更好的性能。总的来说，*GPT* 系列模型之所以相对成功，是因为它们的架构和预训练任务的特点有助于在各种自然语言处理任务中表现出色，但它们也不是免于尺寸增加带来的挑战。
+
+
+
+### 参考文献
+
+[1] [Vaswani, Ashish, et al. "Attention is all you need." *Advances in neural information processing systems* 30 (2017).](https://proceedings.neurips.cc/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf)
+
+[2] [Devlin, Jacob, et al. "Bert: Pre-training of deep bidirectional transformers for language understanding." *arXiv preprint arXiv:1810.04805* (2018).](https://arxiv.org/pdf/1810.04805.pdf&usg=ALkJrhhzxlCL6yTht2BRmH9atgvKFxHsxQ)
+
+[3] [Radford, Alec, et al. "Improving language understanding by generative pre-training." (2018).](https://www.mikecaptain.com/resources/pdf/GPT-1.pdf)
+
+[4] [Lan, Zhenzhong, et al. "Albert: A lite bert for self-supervised learning of language representations." *arXiv preprint arXiv:1909.11942* (2019).](https://arxiv.org/pdf/1909.11942.pdf%3E,)
+
+[5] [Zhang, Zhengyan, et al. "ERNIE: Enhanced Language Representation with Informative Entities." *Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics*. 2019.](https://aclanthology.org/P19-1139/?utm_campaign=%E6%AF%8E%E9%80%B1%20NLP%20%E8%AB%96%E6%96%87&utm_medium=email&utm_source=Revue%20newsletter)
+
+[6] [Liu, Yinhan, et al. "Roberta: A robustly optimized bert pretraining approach." *arXiv preprint arXiv:1907.11692* (2019).](https://arxiv.org/abs/1907.11692)
+
+[7] [He, Pengcheng, et al. "Deberta: Decoding-enhanced bert with disentangled attention." *arXiv preprint arXiv:2006.03654* (2020).](https://arxiv.org/pdf/2006.03654)
+
+[8] [Brown, Tom, et al. "Language models are few-shot learners." *Advances in neural information processing systems* 33 (2020): 1877-1901.](https://proceedings.neurips.cc/paper_files/paper/2020/file/1457c0d6bfcb4967418bfb8ac142f64a-Paper.pdf)
+
+[9] [OpenAI. "Introducing ChatGPT" (2022)](https://openai.com/blog/chatgpt)
+
+[10] [OpenAI. "GPT-4 Technical Report." arXiv preprint arXiv: 2303.08774 (2023)](https://arxiv.org/abs/2303.08774)
+
+[11] [overview of Bard: an early experiment with generative AI](https://ai.google/static/documents/google-about-bard.pdf)
+
+[12] [Palm: Scaling language modeling with pathways](https://www.jmlr.org/papers/v24/22-1144.html)
+
+[13] [Llama: Open and efficient foundation language models](https://arxiv.org/abs/2302.13971)
+
+[14] [Scaling laws for neural language models](https://arxiv.org/abs/2001.08361)
+
+
