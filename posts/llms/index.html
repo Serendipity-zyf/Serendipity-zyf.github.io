@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>大模型入门指南——Deep into the Large Language Models - My New Hugo Site</title><meta name="description" content="本文首先指出大模型源于Google于2017年提出的Transformer架构，开启了大模型时代的来临。随后，文中概述了大模型发展的两大路线:第一是BERT等仅使用Transformer的Encoder进行预训练的模型，通过遮蔽语言模型实现“无监督预训练”，在NLP任务上获得成功。第二是GPT等保留了Transformer的Decoder的模型，通过不断放大模型规模，其零样本和小样本学习能力得以提升，突破了尺寸增加带来的性能瓶颈。GPT-3标志着后一类模型的重要进展。尽管GPT系列取得了进步，但也面临着模型过大带来的训练和推理困难。研究人员仍需在平衡模型规模与性能等方面进行探索。"><meta property="og:title" content="大模型入门指南——Deep into the Large Language Models" />
+<meta property="og:description" content="本文首先指出大模型源于Google于2017年提出的Transformer架构，开启了大模型时代的来临。随后，文中概述了大模型发展的两大路线:第一是BERT等仅使用Transformer的Encoder进行预训练的模型，通过遮蔽语言模型实现“无监督预训练”，在NLP任务上获得成功。第二是GPT等保留了Transformer的Decoder的模型，通过不断放大模型规模，其零样本和小样本学习能力得以提升，突破了尺寸增加带来的性能瓶颈。GPT-3标志着后一类模型的重要进展。尽管GPT系列取得了进步，但也面临着模型过大带来的训练和推理困难。研究人员仍需在平衡模型规模与性能等方面进行探索。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/posts/llms/" /><meta property="og:image" content="http://example.org/logo.png" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-12-18T00:19:53+08:00" />
+<meta property="article:modified_time" content="2023-12-18T00:19:53+08:00" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="http://example.org/logo.png" /><meta name="twitter:title" content="大模型入门指南——Deep into the Large Language Models"/>
+<meta name="twitter:description" content="本文首先指出大模型源于Google于2017年提出的Transformer架构，开启了大模型时代的来临。随后，文中概述了大模型发展的两大路线:第一是BERT等仅使用Transformer的Encoder进行预训练的模型，通过遮蔽语言模型实现“无监督预训练”，在NLP任务上获得成功。第二是GPT等保留了Transformer的Decoder的模型，通过不断放大模型规模，其零样本和小样本学习能力得以提升，突破了尺寸增加带来的性能瓶颈。GPT-3标志着后一类模型的重要进展。尽管GPT系列取得了进步，但也面临着模型过大带来的训练和推理困难。研究人员仍需在平衡模型规模与性能等方面进行探索。"/>
+<meta name="twitter:site" content="@xxxx"/>
+<meta name="application-name" content="Zyf">
+<meta name="apple-mobile-web-app-title" content="Zyf"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/favicon.svg"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/posts/llms/" /><link rel="stylesheet" href="/css/page.min.css"><link rel="stylesheet" href="/css/home.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "大模型入门指南——Deep into the Large Language Models",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/posts\/llms\/"
+        },"image": ["http:\/\/example.org\/images\/Apple-Devices-Preview.webp"],"genre": "posts","wordcount":  315 ,
+        "url": "http:\/\/example.org\/posts\/llms\/","datePublished": "2023-12-18T00:19:53+08:00","dateModified": "2023-12-18T00:19:53+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "xxxx","logo": "http:\/\/example.org\/images\/avatar.webp"},"author": {
+                "@type": "Person",
+                "name": "Zyf"
+            },"description": "本文首先指出大模型源于Google于2017年提出的Transformer架构，开启了大模型时代的来临。随后，文中概述了大模型发展的两大路线:第一是BERT等仅使用Transformer的Encoder进行预训练的模型，通过遮蔽语言模型实现“无监督预训练”，在NLP任务上获得成功。第二是GPT等保留了Transformer的Decoder的模型，通过不断放大模型规模，其零样本和小样本学习能力得以提升，突破了尺寸增加带来的性能瓶颈。GPT-3标志着后一类模型的重要进展。尽管GPT系列取得了进步，但也面临着模型过大带来的训练和推理困难。研究人员仍需在平衡模型规模与性能等方面进行探索。"
+    }
+    </script></head><body data-header-desktop="fixed" data-header-mobile="auto"><script>(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="My New Hugo Site"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/logo.png"
+        data-srcset="/logo.png, /logo.png 1.5x, /logo.png 2x"
+        data-sizes="auto"
+        alt="/logo.png"
+        title="/logo.png" />Z-SPACE</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><a class="menu-item" href="/categories/documentation/"> Docs </a><a class="menu-item" href="/about/"> About </a><a class="menu-item" href="https://github.com/Serendipity-zyf" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fa-brands fa-github fa-fw'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item language" title="Select Language">English<i class="fa-solid fa-chevron-right fa-fw"></i>
+                        <select class="language-select" id="language-select-desktop" onchange="location = this.value;"><option value="/posts/llms/" selected>English</option></select>
+                    </span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
+                        <a href="#" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
+                            <i class="fa-solid fa-search fa-fw"></i>
+                        </a>
+                        <a href="#" class="search-button search-clear" id="search-clear-desktop" title="Clear">
+                            <i class="fa-solid fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fa-solid fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a class="menu-item" href="/index.xml" title="RSS"><i class="fa-solid fa-rss fa-fw" title="RSS"></i> </a><a href="#" onclick="return false;" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fa-solid fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="My New Hugo Site"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/logo.png"
+        data-srcset="/logo.png, /logo.png 1.5x, /logo.png 2x"
+        data-sizes="auto"
+        alt="/logo.png"
+        title="/logo.png" />Z-SPACE</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
+                        <a href="#" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
+                            <i class="fa-solid fa-search fa-fw"></i>
+                        </a>
+                        <a href="#" class="search-button search-clear" id="search-clear-mobile" title="Clear">
+                            <i class="fa-solid fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fa-solid fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="#" class="search-cancel" id="search-cancel-mobile">
+                        Cancel
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a class="menu-item" href="/categories/documentation/" title="">Docs</a><a class="menu-item" href="/about/" title="">About</a><a class="menu-item" href="https://github.com/Serendipity-zyf" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fa-brands fa-github fa-fw'></i></a><div class="menu-item"><a href="/index.xml" title="RSS"><i class="fa-solid fa-rss fa-fw" title="RSS"></i> </a>
+                <span>&nbsp;|&nbsp;</span><a href="#" onclick="return false;" class="theme-switch" title="Switch Theme">
+                    <i class="fa-solid fa-adjust fa-fw"></i>
+                </a>
+            </div><span class="menu-item language" title="Select Language">English<i class="fa-solid fa-chevron-right fa-fw"></i>
+                    <select class="language-select" onchange="location = this.value;"><option value="/posts/llms/" selected>English</option></select>
+                </span></div>
+    </div>
+</header><div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single" data-toc="enable"><div class="single-card" ><h2 class="single-title animated flipInX">大模型入门指南——Deep into the Large Language Models</h2><div class="post-meta">
+                <div class="post-meta-line"><span class="post-author"><a href="https://github.com/Serendipity-zyf" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fa-solid fa-user-circle fa-fw"></i>Zyf</a></span></div>
+                <div class="post-meta-line"><span><i class="fa-regular fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2023-12-18">2023-12-18</time></span>&nbsp;<span><i class="fa-solid fa-pencil-alt fa-fw"></i>&nbsp;315 words</span>&nbsp;
+                    <span><i class="fa-regular fa-clock fa-fw"></i>&nbsp;2 minutes</span>&nbsp;</div>
+            </div>
+            
+            <hr><div class="details toc" id="toc-static"  data-kept="">
+                    <div class="details-summary toc-title">
+                        <span>Contents</span>
+                        <span><i class="details-icon fa-solid fa-angle-right"></i></span>
+                    </div>
+                    <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#背景介绍">背景介绍</a></li>
+        <li><a href="#参考文献">参考文献</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+                </div><div class="content" id="content"><h3 id="背景介绍">背景介绍</h3>
+<p>大模型的起源可以追溯到 2017 年 Google 机器翻译团队发表的著名论文 <em>Attention is All You Need</em>$^{[1]}$。这篇文章提出的由多个编码器（ Encoder） 子块和多个解码器（Decoder）子块堆叠组成的纯注意力机制的模型 <em>Transformer</em> ，宣告了大模型时代的到来。近些年来，大模型的发展大致有两条以下路线：</p>
+<p>1、一条路是舍弃 <em>Transformer</em> 模型中的 Decoder 部分，仅仅使用 Encoder 部分作为编码器的预训练模型，其中最著名的代表就是 <em>BERT</em>$^{[2]}$ (Bidirectional Encoder Representations from Transformers) 家族。这些模型尝试使用&quot;无监督预训练&quot;的方法，以更好地利用相对容易获取的大规模自然语言数据。这种 “无监督” 方法的核心是 “Masked Language Model (MLM)”，即 “遮蔽语言模型”。它通过将句子中的部分单词进行掩盖，让模型学会使用上下文来预测被掩盖的单词。<em>BERT</em> 模型刚问世时在自然语言处理领域引起了巨大轰动，同时在许多常见的自然语言处理任务中，如情感分析、命名实体识别等方面都达到了 SOTA。<em>BERT</em> 家族的杰出代表包括谷歌提出的 <em>BERT</em> 和 <em>ALBERT</em>$^{[4]}$，还有百度的 <em>ERNIE</em>$^{[5]}$、Meta 的 <em>RoBERTa</em>$^{[6]}$、Microsoft 的 <em>DeBERTa</em>$^{[7]}$ 等等。</p>
+<p>2、可惜的是，<em>BERT</em> 的进路没能突破 <em><strong>Scale Law</strong></em>，而这一点则由当下大模型的主力军，即大模型发展的另一条路线是保留 Decoder 模块的 <em>GPT</em>$^{[3]}$ (Generative Pre-trained Transformer) 系列，通过给出部分文本来预测下一个单词，实现语言模型的预训练。 <em>GPT</em> 系列的关键发现是，随着模型规模的扩大，即使不进行微调，其零样本 (Zero-shot) 和小样本学习 (Few-shot) 的能力也可以显著提升。<em>GPT-3</em>$^{[8]}$ 的出现成为这一路线的转折点，它展示了自回归语言模型的强大潜力，不仅在文本生成方面，还可以完成许多看似不相关的任务。从 <em>GPT-3</em> 开始，各家公司推出了 <em>ChatGPT</em>$^{[9]}$、<em>GPT-4</em>$^{[10]}$、<em>Bard</em>$^{[11]}$、<em>PaLM</em>$^{[12]}$、<em>LLaMA</em>$^{[13]}$ 等大模型，掀起了当下大模型技术的热潮，由此带来了当下的大模型盛世。</p>
+<blockquote>
+<p><strong>Scale Law (规模法则)</strong>$^{[14]}$ 指的是机器学习模型的性能随着模型规模的扩大而提升的规律。具体来说：</p>
+<ul>
+<li>在神经网络模型中，当模型的参数量(增加时，模型的表达能力和建模能力也会提高，从而模型的性能会有显著提升。这体现了“大模型”效应。</li>
+<li>一般来说，模型参数量和模型性能之间呈指数关系，即模型性能随着参数量的增加会呈现出指数型增长。这称为“Scale Law”。</li>
+<li><em>BERT</em> 等预训练语言模型在一定规模下会达到性能饱和，无法通过继续增加规模来获得明显提升，被称为遇到 “Scale Law” 瓶颈。</li>
+<li><em>GPT</em> 系列模型表现出了突破 “Scale Law” 的可能,通过持续增加模型规模，其性能可以获得持续较明显的提升。</li>
+</ul>
+<p>Scale Law 反映了模型规模和模型性能之间的关系，预训练语言模型在某个规模会遇到瓶颈，而 <em>GPT</em> 系列表现出突破该瓶颈的可能性。它揭示了模型规模扩大对性能提升的重要作用。<em>GPT</em> 系列模型相对于 <em>BERT</em> 系列模型有一些不同之处，这些不同之处可能有助于其在一定程度上避免 Scale Law 的限制。以下是一些可能的原因：</p>
+<ol>
+<li><strong>Auto-regressive 生成</strong>：<em>GPT</em> 系列模型采用了<strong>自回归 (Auto-regressive)</strong> 生成的方法，它们的预训练任务是预测下一个单词，而不是像 BERT 那样预测被掩盖的单词。这意味着 <em>GPT</em> 模型在预训练阶段已经学会了更好地捕捉文本的上下文信息，这有助于它们在各种自然语言处理任务中表现良好。</li>
+<li><strong>单向性和掩盖</strong>：<em>BERT</em> 模型使用了双向掩盖 (MLM)，其中模型需要预测被掩盖的单词。相比之下，<em>GPT</em> 模型是单向的，只需要预测文本中的下一个单词。这种单向性有助于 <em>GPT</em> 模型更好地捕捉文本的连续性和流畅性。</li>
+<li><strong>生成能力</strong>：<em>GPT</em> 系列模型被设计成生成模型，可以自动生成文本。这使得它们在生成任务上具有明显的优势，例如文本生成、对话生成等。<em>BERT</em> 系列模型通常需要进一步的任务特定头部来进行微调，而 <em>GPT</em> 模型可以直接用于生成任务。</li>
+</ol>
+<p>尽管 <em>GPT</em> 系列模型有这些优势，它们也受到了 Scale Law 的限制，增加模型的尺寸仍然会导致训练和推理成本的显著增加。因此，研究人员也在不断探索如何更好地平衡模型尺寸和性能，以及如何通过模型压缩和微调等技术来克服这些限制，以实现更好的性能。总的来说，<em>GPT</em> 系列模型之所以相对成功，是因为它们的架构和预训练任务的特点有助于在各种自然语言处理任务中表现出色，但它们也不是免于尺寸增加带来的挑战。</p>
+</blockquote>
+<h3 id="参考文献">参考文献</h3>
+<p>[1] <a href="https://proceedings.neurips.cc/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf" target="_blank" rel="noopener noreffer">Vaswani, Ashish, et al. &ldquo;Attention is all you need.&rdquo; <em>Advances in neural information processing systems</em> 30 (2017).</a></p>
+<p>[2] <a href="https://arxiv.org/pdf/1810.04805.pdf&amp;usg=ALkJrhhzxlCL6yTht2BRmH9atgvKFxHsxQ" target="_blank" rel="noopener noreffer">Devlin, Jacob, et al. &ldquo;Bert: Pre-training of deep bidirectional transformers for language understanding.&rdquo; <em>arXiv preprint arXiv:1810.04805</em> (2018).</a></p>
+<p>[3] <a href="https://www.mikecaptain.com/resources/pdf/GPT-1.pdf" target="_blank" rel="noopener noreffer">Radford, Alec, et al. &ldquo;Improving language understanding by generative pre-training.&rdquo; (2018).</a></p>
+<p>[4] <a href="https://arxiv.org/pdf/1909.11942.pdf%3E," target="_blank" rel="noopener noreffer">Lan, Zhenzhong, et al. &ldquo;Albert: A lite bert for self-supervised learning of language representations.&rdquo; <em>arXiv preprint arXiv:1909.11942</em> (2019).</a></p>
+<p>[5] <a href="https://aclanthology.org/P19-1139/?utm_campaign=%E6%AF%8E%E9%80%B1%20NLP%20%E8%AB%96%E6%96%87&amp;utm_medium=email&amp;utm_source=Revue%20newsletter" target="_blank" rel="noopener noreffer">Zhang, Zhengyan, et al. &ldquo;ERNIE: Enhanced Language Representation with Informative Entities.&rdquo; <em>Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics</em>. 2019.</a></p>
+<p>[6] <a href="https://arxiv.org/abs/1907.11692" target="_blank" rel="noopener noreffer">Liu, Yinhan, et al. &ldquo;Roberta: A robustly optimized bert pretraining approach.&rdquo; <em>arXiv preprint arXiv:1907.11692</em> (2019).</a></p>
+<p>[7] <a href="https://arxiv.org/pdf/2006.03654" target="_blank" rel="noopener noreffer">He, Pengcheng, et al. &ldquo;Deberta: Decoding-enhanced bert with disentangled attention.&rdquo; <em>arXiv preprint arXiv:2006.03654</em> (2020).</a></p>
+<p>[8] <a href="https://proceedings.neurips.cc/paper_files/paper/2020/file/1457c0d6bfcb4967418bfb8ac142f64a-Paper.pdf" target="_blank" rel="noopener noreffer">Brown, Tom, et al. &ldquo;Language models are few-shot learners.&rdquo; <em>Advances in neural information processing systems</em> 33 (2020): 1877-1901.</a></p>
+<p>[9] <a href="https://openai.com/blog/chatgpt" target="_blank" rel="noopener noreffer">OpenAI. &ldquo;Introducing ChatGPT&rdquo; (2022)</a></p>
+<p>[10] <a href="https://arxiv.org/abs/2303.08774" target="_blank" rel="noopener noreffer">OpenAI. &ldquo;GPT-4 Technical Report.&rdquo; arXiv preprint arXiv: 2303.08774 (2023)</a></p>
+<p>[11] <a href="https://ai.google/static/documents/google-about-bard.pdf" target="_blank" rel="noopener noreffer">overview of Bard: an early experiment with generative AI</a></p>
+<p>[12] <a href="https://www.jmlr.org/papers/v24/22-1144.html" target="_blank" rel="noopener noreffer">Palm: Scaling language modeling with pathways</a></p>
+<p>[13] <a href="https://arxiv.org/abs/2302.13971" target="_blank" rel="noopener noreffer">Llama: Open and efficient foundation language models</a></p>
+<p>[14] <a href="https://arxiv.org/abs/2001.08361" target="_blank" rel="noopener noreffer">Scaling laws for neural language models</a></p></div><div class="post-footer" id="post-footer">
+    <div class="post-info"><div class="post-info-line"><div class="post-info-mod">
+                <span>Updated on 2023-12-18</span>
+            </div><div class="post-info-mod"><span>
+                        &nbsp;|&nbsp;
+                        <a class="link-to-markdown" href="https://github.com/khusika/FeelIt/edit/main/exampleSite/content/posts/LLMs.md" target="_blank">Improve Article</a>
+                    </span></div>
+        </div><div class="post-info-share">
+            <span><a href="#" onclick="return false;" title="Share on Twitter" data-sharer="twitter" data-url="http://example.org/posts/llms/" data-title="大模型入门指南——Deep into the Large Language Models" data-via="xxxx"><i class="fa-brands fa-square-x-twitter fa-fw"></i></a><a href="#" onclick="return false;" title="Share on Facebook" data-sharer="facebook" data-url="http://example.org/posts/llms/"><i class="fa-brands fa-facebook-square fa-fw"></i></a><a href="#" onclick="return false;" title="Share on Hacker News" data-sharer="hackernews" data-url="http://example.org/posts/llms/" data-title="大模型入门指南——Deep into the Large Language Models"><i class="fa-brands fa-hacker-news fa-fw"></i></a><a href="#" onclick="return false;" title="Share on Line" data-sharer="line" data-url="http://example.org/posts/llms/" data-title="大模型入门指南——Deep into the Large Language Models"><i class="fa-brands fa-line fa-fw"></i></a><a href="#" onclick="return false;" title="Share on 微博" data-sharer="weibo" data-url="http://example.org/posts/llms/" data-title="大模型入门指南——Deep into the Large Language Models"><i class="fa-brands fa-weibo fa-fw"></i></a></span>
+        </div></div><div class="post-nav"></div></div>
+</div></article></div>
+            </main>
+            <footer class="footer"><div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.121.1">Hugo</a> | Theme - <a href="https://github.com/khusika/FeelIt" target="_blank" rel="noopener noreffer" title="FeelIt 1.0.2"><i class="fa-solid fa-hand-holding-heart fa-fw"></i> FeelIt</a>
+        </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright fa-fw"></i><span itemprop="copyrightYear">2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/"></a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+</div>
+<script>
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+        .register('/sw.min.js?version=1.0.2', { scope: '/' })
+        .then(() => {
+            console.info('My New Hugo Site\u00A0Service Worker Registered');
+        }, err => console.error('My New Hugo Site\u00A0Service Worker registration failed: ', err));
+
+    navigator.serviceWorker
+        .ready
+        .then(() => {
+            console.info('My New Hugo Site\u00A0Service Worker Ready');
+        });
+}
+</script>
+</footer>
+        </div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fa-solid fa-chevron-up fa-fw"></i>
+            </a></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css"><script src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.0/dist/autocomplete.min.js"></script><script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.10.3/dist/algoliasearch-lite.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script><script src="https://cdn.jsdelivr.net/npm/sharer.js@0.4.1/sharer.min.js"></script><script>window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":10},"comment":{},"search":{"algoliaAppID":"UAL0NNJWXE","algoliaIndex":"index.en","algoliaSearchKey":"7b7fbdfb7ee82ee61901f2c6b09b05be","highlightTag":"em","maxResultLength":10,"noResultsFound":"No results found","snippetLength":30,"type":"algolia"}};</script><script src="/js/theme.min.js"></script></body></html>
